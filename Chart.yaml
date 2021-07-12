@@ -1,0 +1,14 @@
+apiVersion: v1
+name: dendrite
+version: 0.0.1
+description: Dendrite Matrix Homeserver
+type: application
+keywords:
+  - matrix
+  - chat
+  - homeserver
+  - dendrite
+home: https://github.com/matrix-org/dendrite
+sources:
+  - https://github.com/matrix-org/dendrite
+appVersion: 0.0.1

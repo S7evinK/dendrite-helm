@@ -1,0 +1,92 @@
+{{ include "validate.config" . }}
+{{- $requestMemory := .Values.resources.requests.memory -}}
+{{- $requestCPU := .Values.resources.requests.cpu -}}
+{{- $limitsMemory := .Values.resources.limits.memory -}}
+{{- $limitsCPU := .Values.resources.limits.cpu -}}
+{{- $image := .Values.image.name -}}
+{{ if ne .Values.image.registry ""}}
+{{- $image = (printf "%s/%s" .Values.image.registry .Values.image.name) -}}
+{{ end }}
+{{ $pullPolicy := $.Values.image.pullPolicy -}}
+{{ range $component, $value := .Values.components }}
+{{ if hasKey $value "requests" }}
+{{- $requestMemory := $value.requests.memory -}}
+{{- $requestCPU := $value.requests.cpu -}}
+{{ end }}
+{{ if hasKey $value "limits" }}
+{{- $limitsMemory := $value.limits.memory -}}
+{{- $limitsCPU := $value.limits.cpu -}}
+{{ end }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $component }}
+  labels:
+    app: dendrite
+    dendrite-component: {{ $component }}
+spec:
+  selector:
+    matchLabels:
+      app: dendrite
+      dendrite-component: {{ $component }}
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: dendrite
+        dendrite-component: {{ $component }}
+    spec:
+      volumes:
+      - name: dendrite-conf-vol
+        configMap:
+          name: dendrite-conf
+      {{- if eq $component "mediaapi" }}
+      - name: dendrite-media-nfs
+        persistentVolumeClaim:
+          claimName: dendrite-media-pvc
+      {{- end }}
+      - name: dendrite-logs-nfs
+        persistentVolumeClaim:
+          claimName: dendrite-logs-pvc
+      containers:
+      - name: {{ $component }}
+        image: {{ default "matrixdotorg/dendrite-polylith" $image }}
+        imagePullPolicy: {{ $pullPolicy }}
+        args:
+          - '--config'
+          - '/etc/dendrite/dendrite.yaml'
+          - {{ $component }}
+        volumeMounts:
+        - mountPath: /etc/dendrite/
+          name: dendrite-conf-vol
+        - mountPath: /var/log/dendrite/
+          name: dendrite-logs-nfs
+        {{- if eq $component "mediaapi" }}
+        - name: dendrite-media-nfs
+          mountPath: /data/media_store
+        {{- end }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $component }}
+  labels:
+    app: dendrite
+    dendrite-component: {{ $component }}
+spec:
+  selector:
+    app: dendrite
+    dendrite-component: {{ $component }}
+  ports:
+    - name: {{ $component }}-int
+      protocol: TCP
+      port: {{ $value.listen_int }}
+      targetPort: {{ $value.listen_int }}
+    {{ if $value.listen_ext }}
+    - name: {{ $component }}-ext
+      protocol: TCP
+      port: {{ $value.listen_ext }}
+      targetPort: {{ $value.listen_ext }}
+    {{ end }}
+{{end}}
