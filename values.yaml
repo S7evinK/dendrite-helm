@@ -72,6 +72,9 @@ resources:
     cpu: 240m
     memory: 256Mi
 
+persistence:
+  storageClass: local-path
+
 # Components to deploy
 # listen_int is the port for the internal api connection
 # listen_ext is the port to use for external requests

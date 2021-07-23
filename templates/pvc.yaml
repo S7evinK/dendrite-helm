@@ -11,7 +11,7 @@ spec:
   volumeMode: Filesystem
   accessModes:
     - ReadWriteOnce
-  storageClassName: slow
+  storageClassName: {{ .Values.persistence.storageClass }}
   mountOptions:
     - hard
     - nfsvers=3
@@ -33,7 +33,7 @@ spec:
   resources:
     requests:
       storage: 10G
-  storageClassName: slow
+  storageClassName: {{ .Values.persistence.storageClass }}
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -47,7 +47,7 @@ spec:
   volumeMode: Filesystem
   accessModes:
     - ReadWriteOnce
-  storageClassName: slow
+  storageClassName: {{ .Values.persistence.storageClass }}
   mountOptions:
     - hard
     - nfsvers=3
@@ -69,4 +69,4 @@ spec:
   resources:
     requests:
       storage: 10G
-  storageClassName: slow
+  storageClassName: {{ .Values.persistence.storageClass }}
