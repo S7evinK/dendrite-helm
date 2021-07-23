@@ -48,11 +48,11 @@ configuration:
   kafka:
     topic_prefix: "Dendrite"
     use_naffka: false
-    #use_nats: true
+    use_nats: false # DO NOT USE
     max_message_bytes: 8388608
     # List of Kafka broker addresses to connect to.
     addresses:
-      - nats://nats-cluster.nats.svc.cluster.local:4222 #kafka.kafka.svc.cluster.local:9092
+      - kafka.kafka.svc.cluster.local:9092
 
   # TURN server information that this homeserver should send to clients.
   turn:
