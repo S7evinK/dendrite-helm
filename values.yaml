@@ -1,30 +1,35 @@
 
 
+# Use a polylith setup, which creates a deployment for every component.
+# If false, a monolithic deployment will be created, with a single deployment.
+polylith: true
 
-# image registry to use
+# image to use
 image:
-  registry: ""
   name: ""
   pullPolicy: Always
 
 configuration:
   # servername for this dendrite deployment
-  servername:
+  servername: ""
 
-  # disable registration
-  registration_disabled: true
+  # Lists of domains that the server will trust as identity servers to verify third
+  # party identifiers such as phone numbers and email addresses.
+  trusted_third_party_id_servers:
+    - matrix.org
+    - vector.im
 
   # matrix signing key path to use
   # needs to be generated before deployment at the moment (TODO)
-  #matrix_key:
+  matrix_key: ""
     
   key_validity_period: 168h0m0s
 
   # database connection settings
   database:
-    host: 
-    user: 
-    password: 
+    host:  ""
+    user:  ""
+    password: ""
 
     max_open_conns: 100
     max_idle_conns: 2
@@ -32,7 +37,9 @@ configuration:
 
   # prometheus metrics
   metrics:
-    enabled: true
+    # Whether or not Prometheus metrics are enabled.
+    enabled: false
+    # HTTP basic authentication to protect access to monitoring.
     basic_auth:
       user: "metrics"
       password: metrics
@@ -43,8 +50,25 @@ configuration:
     use_naffka: false
     #use_nats: true
     max_message_bytes: 8388608
+    # List of Kafka broker addresses to connect to.
     addresses:
       - nats://nats-cluster.nats.svc.cluster.local:4222 #kafka.kafka.svc.cluster.local:9092
+
+  # TURN server information that this homeserver should send to clients.
+  turn:
+    turn_user_lifetime: ""
+    turn_uris: []
+    turn_shared_secret: ""
+    turn_username: ""
+    turn_password: ""
+  
+  # Settings for rate-limited endpoints. Rate limiting will kick in after the
+  # threshold number of "slots" have been taken by requests from a specific
+  # host. Each "slot" will be released after the cooloff time in milliseconds.
+  rate_limiting:
+    enabled: true
+    threshold: 5
+    cooloff_ms: 500
 
   # outbound proxy settings for federation sender
   outbound_proxy:
@@ -54,23 +78,39 @@ configuration:
     port: 8080
 
   dns_cache:
-    enabled: true
-    size: 1024
-    lifetime: 600
+    # Whether or not the DNS cache is enabled.
+    enabled: false
+    # Maximum number of entries to hold in the DNS cache, and
+    # for how long those items should be considered valid in seconds.
+    cache_size: 256
+    cache_lifetime: "10m"
 
   logging:
     level: trace
     path: /var/log/dendrite
 
+  tracing:
+    enabled: false
+    jaeger:
+      serviceName: ""
+      disabled: false
+      rpc_metrics: false
+      tags: []
+      sampler: null
+      reporter: null
+      headers: null
+      baggage_restrictions: null
+      throttler: null
+
 # default resource requests/limits
 resources:
   requests:
-    cpu: 80m
-    memory: 64Mi
+    cpu: "80m"
+    memory: "64Mi"
 
   limits:
-    cpu: 240m
-    memory: 256Mi
+    cpu: "240m"
+    memory: "256Mi"
 
 persistence:
   storageClass: local-path
@@ -79,7 +119,6 @@ persistence:
 # listen_int is the port for the internal api connection
 # listen_ext is the port to use for external requests
 # connect defines the dns and port (should be the same as listen_int) for other services to use for connections
-
 components:
   appservice:
     listen_int: 7777
@@ -89,6 +128,22 @@ components:
     listen_int: 7771
     listen_ext: 8071
     connect: clientapi:7771
+
+    # configuration about 
+    registration:
+      # disable registration
+      disabled: true
+
+      # If set, allows registration by anyone who knows the shared secret, regardless of
+      # whether registration is otherwise disabled.
+      shared_secret: ""
+
+      enable_registration_captcha: false
+      # Settings for ReCAPTCHA.
+      recaptcha_public_key: ""
+      recaptcha_private_key: ""
+      recaptcha_bypass_secret: ""
+      recaptcha_siteverify_api: ""
 
   eduserver:
     listen_int: 7778
@@ -112,6 +167,21 @@ components:
     listen_ext: 8074
     connect: mediaapi:7774
     max_file_size_bytes: 10485760
+    # Whether to dynamically generate thumbnails if needed.
+    dynamic_thumbnails: false
+    # The maximum number of simultaneous thumbnail generators to run.
+    max_thumbnail_generators: 10
+    # A list of thumbnail sizes to be generated for media content.
+    thumbnail_sizes:
+    - width: 32
+      height: 32
+      method: crop
+    - width: 96
+      height: 96
+      method: crop
+    - width: 640
+      height: 480
+      method: scale
 
   roomserver:
     listen_int: 7770

@@ -13,8 +13,9 @@ This chart creates a polylith, where every component is in its own deployment an
 - [ ] Cleanup personal stuff (mainly mounts)
 - [ ] Allow SQLite (?)
 - Add configs for
-  - [ ] ReCAPTCHA
-  - [ ] TURN
-  - [ ] Rate limiting
-  - [ ] Tracing
+  - [x] ReCAPTCHA
+  - [x] TURN
+  - [x] Rate limiting
+  - [x] Tracing
+  - [ ] Appservices
 - [ ] Generate matrix_key on installation
