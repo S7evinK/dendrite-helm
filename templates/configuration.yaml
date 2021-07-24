@@ -68,7 +68,7 @@ data:
       {{- toYaml .Values.configuration.trusted_third_party_id_servers | nindent 8 }}
 
       # Configuration for Kafka/Naffka.
-      jetstream:
+      kafka:
         # List of Kafka broker addresses to connect to. This is not needed if using
         # Naffka in monolith mode.
         addresses:
