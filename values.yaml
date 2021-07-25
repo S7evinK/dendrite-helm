@@ -86,8 +86,10 @@ configuration:
     cache_lifetime: "10m"
 
   logging:
-    level: trace
-    path: /var/log/dendrite
+  - type: file
+    level: "error"
+    params:
+      path: /var/log/dendrite
 
   tracing:
     enabled: false
