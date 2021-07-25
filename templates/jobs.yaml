@@ -60,7 +60,7 @@ spec:
         - | 
           # check if key already exists
           key=$(kubectl get secret {{ $secretName }} -o jsonpath="{.data['signing\.key']}" 2> /dev/null)
-          [ $? -ne 0 ] && echo "Failed to get existing secret" && exit 0
+          [ $? -ne 0 ] && echo "Failed to get existing secret" && exit 1
           [ -n "$key" ] && echo "Key already created, exiting." && exit 0
           # wait for signing key
           while [ ! -f /etc/dendrite/signing-key.pem ]; do
