@@ -36,7 +36,7 @@ spec:
         persistentVolumeClaim:
           claimName: {{ default "dendrite-media-pvc" $.Values.persistence.media.existingClaim | quote }}
       {{- end }}
-      {{- if and (eq $component "appservice") (gt (len ($.Files.Glob "appservices/*")) 0) }}
+      {{- if (gt (len ($.Files.Glob "appservices/*")) 0) }}
       - name: {{ $.Chart.Name }}-appservices
         secret:
           secretName: {{ $.Chart.Name }}-appservices-conf
@@ -76,7 +76,7 @@ spec:
         - mountPath: /data/media_store 
           name: dendrite-media      
         {{- end }}
-        {{- if and (eq $component "appservice") (gt (len ($.Files.Glob "appservices/*")) 0) }}
+        {{- if (gt (len ($.Files.Glob "appservices/*")) 0) }}
         - mountPath: /etc/dendrite/appservices
           name: {{ $.Chart.Name }}-appservices
           readOnly: true
