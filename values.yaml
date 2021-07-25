@@ -116,6 +116,12 @@ resources:
 
 persistence:
   storageClass: local-path
+  logs:
+    existingClaim: ""
+    capacity: "10Gi"
+  media:
+    existingClaim: ""
+    capacity: "10Gi"
 
 # Components to deploy
 # listen_int is the port for the internal api connection

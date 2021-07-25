@@ -25,12 +25,12 @@ spec:
       - name: dendrite-conf-vol
         configMap:
           name: {{ $.Chart.Name }}-conf
-      - name: dendrite-logs-nfs
+      - name: dendrite-logs
         persistentVolumeClaim:
-          claimName: dendrite-logs-pvc
-      - name: dendrite-media-nfs
+          claimName: {{ default "dendrite-logs-pvc" $.Values.persistence.logs.existingClaim | quote }}
+      - name: dendrite-media
         persistentVolumeClaim:
-          claimName: dendrite-media-pvc
+          claimName: {{ default "dendrite-media-pvc" $.Values.persistence.media.existingClaim | quote }}
       containers:
       - name: {{ $component }}
         {{- include "image.name" $.Values.image | nindent 8 }}
@@ -43,7 +43,7 @@ spec:
         - mountPath: /etc/dendrite/
           name: dendrite-conf-vol
         - mountPath: /var/log/dendrite/
-          name: dendrite-logs-nfs
+          name: dendrite-logs
         - mountPath: /data/media_store
-          name: dendrite-media-nfs
+          name: dendrite-media
 {{ end }}
