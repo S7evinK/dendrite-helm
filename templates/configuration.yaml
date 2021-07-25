@@ -104,7 +104,10 @@ data:
         conn_max_lifetime: {{ $conMaxLifeTime }}
 
       # Appservice configuration files to load into this homeserver.
-      config_files: []
+      config_files:
+        {{- range $x, $y := .Files.Glob "appservices/*" }}
+          - /etc/dendrite/appservices/{{ base $x }}
+        {{ end }}
 
     # Configuration for the Client API.
     client_api:
