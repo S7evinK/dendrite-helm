@@ -42,6 +42,21 @@ spec:
           - {{ $component }}
         resources:
         {{- toYaml $.Values.resources | nindent 10 }}
+        startupProbe:
+          tcpSocket:
+            port: {{ $value.listen_int }}
+          periodSeconds: 10
+          failureThreshold: 12
+        readinessProbe:
+          tcpSocket:
+            port: {{ $value.listen_int }}
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          tcpSocket:
+            port: {{ $value.listen_int }}
+          initialDelaySeconds: 5
+          periodSeconds: 20
         volumeMounts:
         - mountPath: /etc/dendrite/
           name: dendrite-conf-vol
