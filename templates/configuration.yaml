@@ -9,9 +9,6 @@ metadata:
   name: {{ .Chart.Name }}-conf
   namespace: {{ .Release.Namespace }}
 data:
-{{ if .Values.configuration.matrix_key }}
-  matrix_key.pem: {{ toJson .Values.configuration.matrix_key }}
-{{ end }}
   dendrite.yaml: |
     # This is the Dendrite configuration file.
     #
@@ -51,7 +48,7 @@ data:
       server_name: {{ required "A server_name must be supplied." .Values.configuration.servername | quote }}
 
       # The path to the signing private key file, used to sign requests and events.
-      private_key: matrix_key.pem
+      private_key: /etc/dendrite/secrets/signing.key
 
       # A unique identifier for this private key. Must start with the prefix "ed25519:".
       key_id: ed25519:auto

@@ -1,6 +1,6 @@
 {{- define "validate.config" }}
-{{- if not .Values.configuration.matrix_key -}}
-{{-  fail "You must create an encryption key for configuration.matrix_key. (see https://github.com/matrix-org/dendrite/blob/master/docs/INSTALL.md#server-key-generation)" -}}
+{{- if not .Values.configuration.signing_key.create -}}
+{{-  fail "You must create a signing key for configuration.signing_key. (see https://github.com/matrix-org/dendrite/blob/master/docs/INSTALL.md#server-key-generation)" -}}
 {{- end -}}
 {{- if not .Values.configuration.database.host -}}
 {{-  fail "Database server must be set." -}}

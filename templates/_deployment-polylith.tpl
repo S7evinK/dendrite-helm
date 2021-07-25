@@ -28,6 +28,9 @@ spec:
       - name: dendrite-logs
         persistentVolumeClaim:
           claimName: {{ default "dendrite-logs-pvc" $.Values.persistence.logs.existingClaim | quote }}
+      - name: {{ $.Chart.Name }}-signing-key
+        secret:
+          secretName: {{ default "dendrite-signing-key" $.Values.configuration.signing_key.existingSecret | quote }}
       {{- if eq $component "mediaapi" }}
       - name: dendrite-media
         persistentVolumeClaim:
@@ -65,6 +68,8 @@ spec:
         volumeMounts:
         - mountPath: /etc/dendrite/
           name: dendrite-conf-vol
+        - mountPath: /etc/dendrite/secrets/
+          name: {{ $.Chart.Name }}-signing-key
         - mountPath: /var/log/dendrite/
           name: dendrite-logs
         {{- if eq $component "mediaapi" }}

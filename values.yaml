@@ -19,9 +19,12 @@ configuration:
     - matrix.org
     - vector.im
 
-  # matrix signing key path to use
-  # needs to be generated before deployment at the moment (TODO)
-  matrix_key: ""
+  # signing key to use
+  signing_key:
+    # Create a new signing key, if not exists
+    create: true
+    # Use an existing secret
+    existingSecret: ""
     
   key_validity_period: 168h0m0s
 

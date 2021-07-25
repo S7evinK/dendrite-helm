@@ -25,6 +25,9 @@ spec:
       - name: dendrite-conf-vol
         configMap:
           name: {{ $.Chart.Name }}-conf
+      - name: {{ $.Chart.Name }}-signing-key
+        secret:
+          secretName: {{ default "dendrite-signing-key" $.Values.configuration.signing_key.existingSecret | quote }}
       {{- if (gt (len ($.Files.Glob "appservices/*")) 0) }}
       - name: {{ $.Chart.Name }}-appservices
         secret:
@@ -47,6 +50,8 @@ spec:
         volumeMounts:
         - mountPath: /etc/dendrite/
           name: dendrite-conf-vol
+        - mountPath: /etc/dendrite/secrets/
+          name: {{ $.Chart.Name }}-signing-key
         {{- if (gt (len ($.Files.Glob "appservices/*")) 0) }}
         - mountPath: /etc/dendrite/appservices
           name: {{ $.Chart.Name }}-appservices
