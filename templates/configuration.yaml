@@ -297,7 +297,4 @@ data:
     # Logging configuration, in addition to the standard logging that is sent to
     # stdout by Dendrite.
     logging:
-    - type: file
-      level: {{ default "error" .Values.configuration.logging.level }}
-      params:
-        path: {{ default "/var/log/dendrite" .Values.configuration.logging.path }} 
+    {{- toYaml .Values.configuration.logging | nindent 4 }}
