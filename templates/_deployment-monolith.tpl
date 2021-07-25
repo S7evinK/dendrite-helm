@@ -25,6 +25,11 @@ spec:
       - name: dendrite-conf-vol
         configMap:
           name: {{ $.Chart.Name }}-conf
+      {{- if (gt (len ($.Files.Glob "appservices/*")) 0) }}
+      - name: {{ $.Chart.Name }}-appservices
+        secret:
+          secretName: {{ $.Chart.Name }}-appservices-conf
+      {{- end }}
       - name: dendrite-logs
         persistentVolumeClaim:
           claimName: {{ default "dendrite-logs-pvc" $.Values.persistence.logs.existingClaim | quote }}
@@ -42,6 +47,11 @@ spec:
         volumeMounts:
         - mountPath: /etc/dendrite/
           name: dendrite-conf-vol
+        {{- if (gt (len ($.Files.Glob "appservices/*")) 0) }}
+        - mountPath: /etc/dendrite/appservices
+          name: {{ $.Chart.Name }}-appservices
+          readOnly: true
+        {{ end }}
         - mountPath: /var/log/dendrite/
           name: dendrite-logs
         - mountPath: /data/media_store
