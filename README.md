@@ -22,5 +22,5 @@ Create a folder `appservices` and place your configurations in there.  The confi
   - [x] Rate limiting
   - [x] Tracing
   - [x] Appservices
-- [ ] Generate matrix_key on installation
+- [x] Generate matrix_key on installation
 - [ ] Add dependencies
