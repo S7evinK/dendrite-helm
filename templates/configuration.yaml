@@ -132,7 +132,7 @@ data:
 
       # Prevents new users from being able to register on this homeserver, except when
       # using the registration shared secret below.
-      registration_disabled: {{ .disabled }}
+      registration_disabled: {{ .registration.disabled }}
 
       # If set, allows registration by anyone who knows the shared secret, regardless of
       # whether registration is otherwise disabled.
