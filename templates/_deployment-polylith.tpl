@@ -50,6 +50,11 @@ spec:
           - {{ $component }}
         resources:
         {{- toYaml $.Values.resources | nindent 10 }}
+        {{  if $.Values.configuration.profiling.enabled }}
+        env:
+          - name: PPROFLISTEN
+            value: "localhost:{{- $.Values.configuration.profiling.port -}}"
+        {{- end}}
         startupProbe:
           tcpSocket:
             port: {{ $value.listen_int }}

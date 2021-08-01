@@ -107,6 +107,10 @@ configuration:
       baggage_restrictions: null
       throttler: null
 
+  profiling:
+    enabled: false
+    port: 65432
+
 # default resource requests/limits
 resources:
   requests:
