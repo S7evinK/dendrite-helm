@@ -206,6 +206,11 @@ components:
     listen_int: 7773
     listen_ext: 8073
     connect: syncapi:7773
+    # This option controls which HTTP header to inspect to find the real remote IP
+    # address of the client. This is likely required if Dendrite is running behind
+    # a reverse proxy server.
+    real_ip_header: X-Real-IP
+
 
   signingkeyserver:
     listen_int: 7780
