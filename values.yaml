@@ -114,6 +114,13 @@ configuration:
     enabled: false
     port: 65432
 
+  # Configuration for experimental MSC's
+  mscs:
+    # A list of enabled MSC's
+    # Currently valid values are:
+    # - msc2836    (Threading, see https://github.com/matrix-org/matrix-doc/pull/2836)
+    # - msc2946    (Spaces Summary, see https://github.com/matrix-org/matrix-doc/pull/2946)
+
 # default resource requests/limits
 resources:
   requests:
@@ -132,6 +139,8 @@ persistence:
   media:
     existingClaim: ""
     capacity: "10Gi"
+
+
 
 # Components to deploy
 # listen_int is the port for the internal api connection

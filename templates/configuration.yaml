@@ -89,6 +89,22 @@ data:
       dns_cache:
         {{- toYaml .Values.configuration.dns_cache | nindent 8 }}
 
+    {{- if .Values.configuration.mscs }}
+    # Configuration for experimental MSC's
+    mscs:
+      # A list of enabled MSC's
+      # Currently valid values are:
+      # - msc2836    (Threading, see https://github.com/matrix-org/matrix-doc/pull/2836)
+      # - msc2946    (Spaces Summary, see https://github.com/matrix-org/matrix-doc/pull/2946)
+      mscs:
+        {{- toYaml .Values.configuration.mscs | nindent 8 }}
+      database:
+        connection_string: postgresql://{{- $databaseConnectionString -}}/dendrite_mscs?sslmode=disable
+        max_open_conns: {{ $maxOpenConns }}
+        max_idle_conns: {{ $maxIdleConns }}
+        conn_max_lifetime: {{ $conMaxLifeTime }}
+    {{ end }}
+
     # Configuration for the Appservice API.
     app_service_api:
       internal_api:
