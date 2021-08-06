@@ -65,35 +65,20 @@ data:
       {{- toYaml .Values.configuration.trusted_third_party_id_servers | nindent 8 }}
 
       # Configuration for Kafka/Naffka.
-      kafka:
-        # List of Kafka broker addresses to connect to. This is not needed if using
-        # Naffka in monolith mode.
+      jetstream:
+        # List of NATS addresses to connect to. If empty, an in-process NATS server is used.
         addresses:
-        {{- toYaml .Values.configuration.kafka.addresses | nindent 10 }}
+        {{- toYaml .Values.configuration.jetstream.addresses | nindent 10 }}
 
         # The prefix to use for Kafka topic names for this homeserver. Change this only if
         # you are running more than one Dendrite homeserver on the same Kafka deployment.
-        topic_prefix: {{ default "Dendrite" .Values.configuration.kafka.topic_prefix }}
+        topic_prefix: {{ default "Dendrite" .Values.configuration.jetstream.topic_prefix }}
 
-        # Whether to use Naffka instead of Kafka. This is only available in monolith
-        # mode, but means that you can run a single-process server without requiring
-        # Kafka.
-        use_naffka: {{ .Values.configuration.kafka.use_naffka }}
+        # Keep all storage in memory. This is mostly useful for unit tests.
+        in_memory: {{ .Values.configuration.jetstream.in_memory }}
 
-        use_nats: {{ .Values.configuration.kafka.use_nats }}
-
-        # The max size a Kafka message is allowed to use.
-        # You only need to change this value, if you encounter issues with too large messages.
-        # Must be less than/equal to "max.message.bytes" configured in Kafka.
-        # Defaults to 8388608 bytes.
-        max_message_bytes: {{ default 8388608 .Values.configuration.kafka.max_message_bytes }}
-
-        # Naffka database options. Not required when using Kafka.
-        naffka_database:
-          connection_string: postgresql://{{- $databaseConnectionString -}}/dendrite_naffka?sslmode=disable
-          max_open_conns: {{ $maxOpenConns }}
-          max_idle_conns: {{ $maxIdleConns }}
-          conn_max_lifetime: {{ $conMaxLifeTime }}
+        # Persistent directory to store JetStream streams in.
+        storage_path: {{ .Values.configuration.jetstream.storage_path | quote }}
 
       # Configuration for Prometheus metric collection.
       metrics:
