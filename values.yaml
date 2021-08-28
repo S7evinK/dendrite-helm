@@ -19,6 +19,10 @@ configuration:
     - matrix.org
     - vector.im
 
+  # Disables federation. Dendrite will not be able to make any outbound HTTP requests
+  # to other servers and the federation API will not be exposed.
+  disable_federation: false
+
   # signing key to use
   signing_key:
     # Create a new signing key, if not exists
