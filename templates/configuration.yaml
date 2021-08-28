@@ -64,6 +64,10 @@ data:
       trusted_third_party_id_servers:
       {{- toYaml .Values.configuration.trusted_third_party_id_servers | nindent 8 }}
 
+      # Disables federation. Dendrite will not be able to make any outbound HTTP requests
+      # to other servers and the federation API will not be exposed.
+      disable_federation: {{ .Values.configuration.disable_federation }}
+
       # Configuration for Kafka/Naffka.
       kafka:
         # List of Kafka broker addresses to connect to. This is not needed if using
