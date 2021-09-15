@@ -322,4 +322,6 @@ data:
     # Logging configuration, in addition to the standard logging that is sent to
     # stdout by Dendrite.
     logging:
+    {{ if .Values.configuration.logging }}
     {{- toYaml .Values.configuration.logging | nindent 4 }}
+    {{ end }}
