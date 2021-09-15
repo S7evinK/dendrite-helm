@@ -123,6 +123,7 @@ configuration:
     # - msc2946    (Spaces Summary, see https://github.com/matrix-org/matrix-doc/pull/2946)
 
 # default resource requests/limits
+# This can be set individually for each component, see mediaapi below
 resources:
   requests:
     cpu: "80m"
@@ -210,6 +211,13 @@ components:
     - width: 640
       height: 480
       method: scale
+    #resources:
+    #  requests:
+    #    cpu: "160m"
+    #    memory: "128Mi"
+    #  limits:
+    #    cpu: "480m"
+    #    memory: "512Mi"
 
   roomserver:
     listen_int: 7770
