@@ -112,7 +112,6 @@ data:
       dns_cache:
         {{- toYaml .Values.configuration.dns_cache | nindent 8 }}
 
-    {{- if .Values.configuration.mscs }}
     # Configuration for experimental MSC's
     mscs:
       # A list of enabled MSC's
@@ -126,7 +125,6 @@ data:
         max_open_conns: {{ $maxOpenConns }}
         max_idle_conns: {{ $maxIdleConns }}
         conn_max_lifetime: {{ $conMaxLifeTime }}
-    {{ end }}
 
     # Configuration for the Appservice API.
     app_service_api:
