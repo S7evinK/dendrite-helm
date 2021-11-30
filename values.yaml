@@ -59,7 +59,6 @@ configuration:
   kafka:
     topic_prefix: "Dendrite"
     use_naffka: false
-    use_nats: false # DO NOT USE
     max_message_bytes: 8388608
     # List of Kafka broker addresses to connect to.
     addresses:
@@ -81,7 +80,7 @@ configuration:
     threshold: 5
     cooloff_ms: 500
 
-  # outbound proxy settings for federation sender
+  # outbound proxy settings for federation api
   outbound_proxy:
     enabled: false
     protocol: http
@@ -186,10 +185,9 @@ components:
     listen_int: 7772
     listen_ext: 8072
     connect: federationapi:7772
-
-  federationsender:
-    listen_int: 7775
-    connect: federationsender:7775
+    send_max_retries: 16
+    disable_tls_validation: false
+    prefer_direct_fetch: false
 
   keyserver:
     listen_int: 7779
@@ -235,11 +233,6 @@ components:
     # address of the client. This is likely required if Dendrite is running behind
     # a reverse proxy server.
     real_ip_header: X-Real-IP
-
-
-  signingkeyserver:
-    listen_int: 7780
-    connect: signingkeyserver:7780
 
   userapi:
     listen_int: 7781

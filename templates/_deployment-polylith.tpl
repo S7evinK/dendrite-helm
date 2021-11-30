@@ -49,16 +49,16 @@ spec:
           - '/etc/dendrite/dendrite.yaml'
           - {{ $component }}
         resources:
-        {{ if $value.resources }}
-        {{- toYaml $value.resources | nindent 10 }}
+        {{- if $value.resources }}
+        {{- toYaml $value.resources | nindent 10 -}}
         {{ else }}
-        {{- toYaml $.Values.resources | nindent 10 }}
-        {{- end }}
-        {{  if $.Values.configuration.profiling.enabled }}
+        {{- toYaml $.Values.resources | nindent 10 -}}
+        {{- end -}}
+        {{-  if $.Values.configuration.profiling.enabled }}
         env:
           - name: PPROFLISTEN
             value: "localhost:{{- $.Values.configuration.profiling.port -}}"
-        {{- end}}
+        {{- end }}
         startupProbe:
           tcpSocket:
             port: {{ $value.listen_int }}

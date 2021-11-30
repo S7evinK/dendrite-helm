@@ -88,8 +88,6 @@ data:
         # Kafka.
         use_naffka: {{ .Values.configuration.kafka.use_naffka }}
 
-        use_nats: {{ .Values.configuration.kafka.use_nats }}
-
         # The max size a Kafka message is allowed to use.
         # You only need to change this value, if you encounter issues with too large messages.
         # Must be less than/equal to "max.message.bytes" configured in Kafka.
@@ -192,6 +190,11 @@ data:
         connect: http://{{ .Values.components.federationapi.connect }}
       external_api:
         listen: http://[::]:{{ .Values.components.federationapi.listen_ext }}
+      database:
+        connection_string: postgresql://{{- $databaseConnectionString -}}/dendrite_federationapi?sslmode=disable
+        max_open_conns: {{ $maxOpenConns }}
+        max_idle_conns: {{ $maxIdleConns }}
+        conn_max_lifetime: {{ $conMaxLifeTime }}
 
       # List of paths to X.509 certificates to be used by the external federation listeners.
       # These certificates will be used to calculate the TLS fingerprints and other servers
@@ -199,28 +202,33 @@ data:
       # format.
       #federation_certificates: []
 
-    # Configuration for the Federation Sender.
-    federation_sender:
-      internal_api:
-        listen: http://[::]:{{ .Values.components.federationsender.listen_int }}
-        connect: http://{{ .Values.components.federationsender.connect }}
-      database:
-        connection_string: postgresql://{{- $databaseConnectionString -}}/dendrite_federationsender?sslmode=disable
-        max_open_conns: {{ $maxOpenConns }}
-        max_idle_conns: {{ $maxIdleConns }}
-        conn_max_lifetime: {{ $conMaxLifeTime }}
-
       # How many times we will try to resend a failed transaction to a specific server. The
       # backoff is 2**x seconds, so 1 = 2 seconds, 2 = 4 seconds, 3 = 8 seconds etc.
-      send_max_retries: 16
+      send_max_retries: {{ .Values.components.federationapi.send_max_retries }}
 
       # Disable the validation of TLS certificates of remote federated homeservers. Do not
       # enable this option in production as it presents a security risk!
-      disable_tls_validation: false
+      disable_tls_validation: {{ .Values.components.federationapi.disable_tls_validation }}
 
       # Use the following proxy server for outbound federation traffic.
       proxy_outbound:
         {{- toYaml .Values.configuration.outbound_proxy | nindent 8 }}
+
+      # Perspective keyservers to use as a backup when direct key fetches fail. This may
+      # be required to satisfy key requests for servers that are no longer online when
+      # joining some rooms.
+      key_perspectives:
+      - server_name: matrix.org
+        keys:
+        - key_id: ed25519:auto
+          public_key: Noi6WqcDj0QmPxCNQqgezwTlBKrfqehY1u2FyWP9uYw
+        - key_id: ed25519:a_RXGa
+          public_key: l8Hft5qXKn1vfHrg3p4+W8gELQVo8N13JkluMfmn2sQ 
+
+      # This option will control whether Dendrite will prefer to look up keys directly
+      # or whether it should try perspective servers first, using direct fetches as a
+      # last resort.
+      prefer_direct_fetch: {{ .Values.components.federationapi.prefer_direct_fetch }}
 
     # Configuration for the Key Server (for end-to-end encryption).
     key_server:
@@ -274,28 +282,6 @@ data:
         max_idle_conns: {{ $maxIdleConns }}
         conn_max_lifetime: {{ $conMaxLifeTime }}
 
-    # Configuration for the Server Key API (for server signing keys).
-    signing_key_server:
-      internal_api:
-        listen: http://[::]:{{ .Values.components.signingkeyserver.listen_int }}
-        connect: http://{{ .Values.components.signingkeyserver.connect }}
-      database:
-        connection_string: postgresql://{{- $databaseConnectionString -}}/dendrite_signingkeyserver?sslmode=disable
-        max_open_conns: {{ $maxOpenConns }}
-        max_idle_conns: {{ $maxIdleConns }}
-        conn_max_lifetime: {{ $conMaxLifeTime }}
-
-      # Perspective keyservers to use as a backup when direct key fetches fail. This may
-      # be required to satisfy key requests for servers that are no longer online when
-      # joining some rooms.
-      key_perspectives:
-      - server_name: matrix.org
-        keys:
-        - key_id: ed25519:auto
-          public_key: Noi6WqcDj0QmPxCNQqgezwTlBKrfqehY1u2FyWP9uYw
-        - key_id: ed25519:a_RXGa
-          public_key: l8Hft5qXKn1vfHrg3p4+W8gELQVo8N13JkluMfmn2sQ
-
     # Configuration for the Sync API.
     sync_api:
       internal_api:
@@ -339,6 +325,6 @@ data:
     # Logging configuration, in addition to the standard logging that is sent to
     # stdout by Dendrite.
     logging:
-    {{ if .Values.configuration.logging }}
+    {{- if .Values.configuration.logging }}
     {{- toYaml .Values.configuration.logging | nindent 4 }}
     {{ end }}
