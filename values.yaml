@@ -4,9 +4,9 @@
 # If false, a monolithic deployment will be created, with a single deployment.
 polylith: true
 
-# image to use
+# Docker image to use
 image:
-  name: ""
+  name: "matrixdotorg/dendrite-polylith:latest"
   pullPolicy: Always
 
 configuration:
