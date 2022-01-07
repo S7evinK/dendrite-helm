@@ -8,11 +8,11 @@ metadata:
   name: {{ $component }}
   labels:
     app: {{ $.Chart.Name }}
-    dendrite-component: {{ $component }}
+    component: {{ $component }}
 spec:
   selector:
     app: {{ $.Chart.Name }}
-    dendrite-component: {{ $component }}
+    component: {{ $component }}
   ports:
     - name: {{ $component }}-int
       protocol: TCP

@@ -8,18 +8,18 @@ metadata:
   name: {{ $component }}
   labels:
     app: {{ $.Chart.Name }}
-    dendrite-component: {{ $component }}
+    component: {{ $component }}
 spec:
   selector:
     matchLabels:
       app: {{ $.Chart.Name }}
-      dendrite-component: {{ $component }}
+      component: {{ $component }}
   replicas: 1
   template:
     metadata:
       labels:
         app: {{ $.Chart.Name }}
-        dendrite-component: {{ $component }}
+        component: {{ $component }}
     spec:
       volumes:
       - name: dendrite-conf-vol
