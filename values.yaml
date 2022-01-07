@@ -201,7 +201,7 @@ components:
     listen_int: 7774
     listen_ext: 8074
     connect: mediaapi:7774
-    max_file_size_bytes: 10485760
+    max_file_size_bytes: "10485760"
     # Whether to dynamically generate thumbnails if needed.
     dynamic_thumbnails: false
     # The maximum number of simultaneous thumbnail generators to run.

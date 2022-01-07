@@ -22,9 +22,9 @@ spec:
         component: {{ $component }}
     spec:
       volumes:
-      - name: dendrite-conf-vol
-        configMap:
-          name: {{ $.Chart.Name }}-conf
+      - name: {{ $.Chart.Name }}-conf-vol
+        secret:
+          secretName: {{ $.Chart.Name }}-conf
       - name: dendrite-logs
         persistentVolumeClaim:
           claimName: {{ default "dendrite-logs-pvc" $.Values.persistence.logs.existingClaim | quote }}
@@ -76,7 +76,7 @@ spec:
           periodSeconds: 20
         volumeMounts:
         - mountPath: /etc/dendrite/
-          name: dendrite-conf-vol
+          name: {{ $.Chart.Name }}-conf-vol
         - mountPath: /etc/dendrite/secrets/
           name: {{ $.Chart.Name }}-signing-key
         - mountPath: /var/log/dendrite/
