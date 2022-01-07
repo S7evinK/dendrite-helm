@@ -40,7 +40,7 @@ data:
     # connection can be idle in seconds - a negative value is unlimited.
 
     # The version of the configuration file.
-    version: 1
+    version: 2
 
     # Global Matrix configuration. This configuration applies to all components.
     global:
@@ -72,9 +72,12 @@ data:
       # to other servers and the federation API will not be exposed.
       disable_federation: {{ .Values.configuration.disable_federation }}
 
-      # Configuration for Kafka/Naffka.
+      # Configuration for NATS JetStream
       jetstream:
-        # List of NATS addresses to connect to. If empty, an in-process NATS server is used.
+        # A list of NATS Server addresses to connect to. If none are specified, an
+        # internal NATS server will be started automatically when running Dendrite
+        # in monolith mode. It is required to specify the address of at least one
+        # NATS Server node if running in polylith mode.
         addresses:
         {{- toYaml .Values.configuration.jetstream.addresses | nindent 10 }}
 
@@ -82,10 +85,13 @@ data:
         # you are running more than one Dendrite homeserver on the same Kafka deployment.
         topic_prefix: {{ default "Dendrite" .Values.configuration.jetstream.topic_prefix }}
 
-        # Keep all storage in memory. This is mostly useful for unit tests.
+        # Keep all NATS streams in memory, rather than persisting it to the storage
+        # path below. This option is present primarily for integration testing and
+        # should not be used on a real world Dendrite deployment.
         in_memory: {{ .Values.configuration.jetstream.in_memory }}
 
-        # Persistent directory to store JetStream streams in.
+        # Persistent directory to store JetStream streams in. This directory 
+        # should be preserved across Dendrite restarts.
         storage_path: {{ .Values.configuration.jetstream.storage_path | quote }}
 
       # Configuration for Prometheus metric collection.
