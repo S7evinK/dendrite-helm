@@ -55,14 +55,18 @@ configuration:
       user: "metrics"
       password: metrics
 
-  # kafka connection settings
-  kafka:
+  # NATS connection settings
+  jetstream:
+    # The prefix to use for NATS topic names for this homeserver. Change this only if
+    # you are running more than one Dendrite homeserver on the same NATS deployment.
     topic_prefix: "Dendrite"
-    use_naffka: false
-    max_message_bytes: 8388608
-    # List of Kafka broker addresses to connect to.
+    # Keep all storage in memory. This is mostly useful for unit tests.
+    in_memory: false
+    # Persistent directory to store JetStream streams in. (only relevant if not using external NATS)
+    storage_path: "./"
+    # List of NATS addresses to connect to. If empty, an in-process NATS server is used.
     addresses:
-      - kafka.kafka.svc.cluster.local:9092
+      #- nats://nats-cluster.nats.svc.cluster.local:4222
 
   # TURN server information that this homeserver should send to clients.
   turn:

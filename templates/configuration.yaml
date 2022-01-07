@@ -40,7 +40,7 @@ data:
     # connection can be idle in seconds - a negative value is unlimited.
 
     # The version of the configuration file.
-    version: 1
+    version: 2
 
     # Global Matrix configuration. This configuration applies to all components.
     global:
@@ -72,34 +72,27 @@ data:
       # to other servers and the federation API will not be exposed.
       disable_federation: {{ .Values.configuration.disable_federation }}
 
-      # Configuration for Kafka/Naffka.
-      kafka:
-        # List of Kafka broker addresses to connect to. This is not needed if using
-        # Naffka in monolith mode.
+      # Configuration for NATS JetStream
+      jetstream:
+        # A list of NATS Server addresses to connect to. If none are specified, an
+        # internal NATS server will be started automatically when running Dendrite
+        # in monolith mode. It is required to specify the address of at least one
+        # NATS Server node if running in polylith mode.
         addresses:
-        {{- toYaml .Values.configuration.kafka.addresses | nindent 10 }}
+        {{- toYaml .Values.configuration.jetstream.addresses | nindent 10 }}
 
         # The prefix to use for Kafka topic names for this homeserver. Change this only if
         # you are running more than one Dendrite homeserver on the same Kafka deployment.
-        topic_prefix: {{ default "Dendrite" .Values.configuration.kafka.topic_prefix }}
+        topic_prefix: {{ default "Dendrite" .Values.configuration.jetstream.topic_prefix }}
 
-        # Whether to use Naffka instead of Kafka. This is only available in monolith
-        # mode, but means that you can run a single-process server without requiring
-        # Kafka.
-        use_naffka: {{ .Values.configuration.kafka.use_naffka }}
+        # Keep all NATS streams in memory, rather than persisting it to the storage
+        # path below. This option is present primarily for integration testing and
+        # should not be used on a real world Dendrite deployment.
+        in_memory: {{ .Values.configuration.jetstream.in_memory }}
 
-        # The max size a Kafka message is allowed to use.
-        # You only need to change this value, if you encounter issues with too large messages.
-        # Must be less than/equal to "max.message.bytes" configured in Kafka.
-        # Defaults to 8388608 bytes.
-        max_message_bytes: {{ default 8388608 .Values.configuration.kafka.max_message_bytes }}
-
-        # Naffka database options. Not required when using Kafka.
-        naffka_database:
-          connection_string: postgresql://{{- $databaseConnectionString -}}/dendrite_naffka?sslmode=disable
-          max_open_conns: {{ $maxOpenConns }}
-          max_idle_conns: {{ $maxIdleConns }}
-          conn_max_lifetime: {{ $conMaxLifeTime }}
+        # Persistent directory to store JetStream streams in. This directory 
+        # should be preserved across Dendrite restarts.
+        storage_path: {{ .Values.configuration.jetstream.storage_path | quote }}
 
       # Configuration for Prometheus metric collection.
       metrics:
