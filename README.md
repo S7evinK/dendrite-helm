@@ -6,14 +6,13 @@ Status: NOT PRODUCTION READY
 
 This is a first try for a Helm Chart for the [Matrix](https://matrix.org) Homeserver [Dendrite](https://github.com/matrix-org/dendrite)
 
-This chart creates a polylith, where every component is in its own deployment and requires a Postgres server aswell as a Kafka server.
+This chart creates a polylith, where every component is in its own deployment and requires a Postgres server aswell as a NATS JetStream server.
 
 ## Databases
 
 You'll need to create the following databases before starting Dendrite (see [install.md](https://github.com/matrix-org/dendrite/blob/master/docs/INSTALL.md#configuration)):
 
-
-```
+```postgres
 create database dendrite_federationapi;
 create database dendrite_mediaapi;
 create database dendrite_roomserver;
