@@ -3,13 +3,15 @@
 # Use a polylith setup, which creates a deployment for every component.
 # If false, a monolithic deployment will be created, with a single deployment.
 polylith: true
-
 # Docker image to use
 image:
   name: "matrixdotorg/dendrite-polylith:latest"
   pullPolicy: Always
 
 configuration:
+  # config version
+  version: 2
+
   # servername for this dendrite deployment
   servername: ""
 
@@ -196,6 +198,10 @@ components:
   keyserver:
     listen_int: 7779
     connect: keyserver:7779
+  
+  signingkeyserver:
+    listen_int: 7782
+    connect: signingkeyserver:7782
 
   mediaapi:
     listen_int: 7774
@@ -241,3 +247,39 @@ components:
   userapi:
     listen_int: 7781
     connect: userapi:7781
+
+nats:
+  enabled: true
+
+  nats:
+    jetstream:
+      enabled: true
+
+postgresql:
+  enabled: true
+  global:
+    storageClass: ""
+    postgresql:
+      postgresqlDatabase: ""
+      postgresqlUsername: ""
+      existingSecret: ""
+      postgresqlPassword: ""
+      servicePort: ""
+      replicationPassword: ""
+
+  initdbScripts:
+    create_db.sh: |
+      #!/bin/sh
+      for db in userapi_accounts userapi_devices mediaapi syncapi roomserver keyserver signingkeyserver federationapi appservice mscs; do
+          createdb -U dendrite -O dendrite dendrite_$db
+      done
+
+  persistence:
+    enabled: false
+
+ingress:
+  enabled: false
+  
+  annotations: {}
+  hosts: []
+  tls: []
