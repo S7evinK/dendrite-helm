@@ -249,14 +249,14 @@ components:
     connect: userapi:7781
 
 nats:
-  enabled: true
+  enabled: false
 
   nats:
     jetstream:
       enabled: true
 
 postgresql:
-  enabled: true
+  enabled: false
   global:
     storageClass: ""
     postgresql:
