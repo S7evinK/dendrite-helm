@@ -198,10 +198,6 @@ components:
   keyserver:
     listen_int: 7779
     connect: keyserver:7779
-  
-  signingkeyserver:
-    listen_int: 7782
-    connect: signingkeyserver:7782
 
   mediaapi:
     listen_int: 7774
@@ -270,7 +266,7 @@ postgresql:
   initdbScripts:
     create_db.sh: |
       #!/bin/sh
-      for db in userapi_accounts userapi_devices mediaapi syncapi roomserver keyserver signingkeyserver federationapi appservice mscs; do
+      for db in userapi_accounts userapi_devices mediaapi syncapi roomserver keyserver federationapi appservice mscs; do
           createdb -U dendrite -O dendrite dendrite_$db
       done
 
