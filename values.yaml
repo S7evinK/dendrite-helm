@@ -194,19 +194,21 @@ components:
     # -- Connect is the address for other components to connect to
     connect: clientapi:7771
 
-    # configuration about 
     registration:
-      # disable registration
+      # -- Disable registration
       disabled: true
 
-      # If set, allows registration by anyone who knows the shared secret, regardless of
+      # -- If set, allows registration by anyone who knows the shared secret, regardless of
       # whether registration is otherwise disabled.
       shared_secret: ""
 
+      # -- enable reCAPTCHA registration
       enable_registration_captcha: false
-      # Settings for ReCAPTCHA.
+      # -- reCAPTCHA public key 
       recaptcha_public_key: ""
+      # -- reCAPTCHA private key
       recaptcha_private_key: ""
+      # -- reCAPTCHA bypass secret
       recaptcha_bypass_secret: ""
       recaptcha_siteverify_api: ""
 

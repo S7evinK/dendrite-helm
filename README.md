@@ -52,13 +52,13 @@ Create a folder `appservices` and place your configurations in there.  The confi
 | components.clientapi.connect | string | `"clientapi:7771"` | Connect is the address for other components to connect to |
 | components.clientapi.listen_ext | int | `8071` | listen_ext is the port for external connections |
 | components.clientapi.listen_int | int | `7771` | listen_int is the port for the internal api connection |
-| components.clientapi.registration.disabled | bool | `true` |  |
-| components.clientapi.registration.enable_registration_captcha | bool | `false` |  |
-| components.clientapi.registration.recaptcha_bypass_secret | string | `""` |  |
-| components.clientapi.registration.recaptcha_private_key | string | `""` |  |
-| components.clientapi.registration.recaptcha_public_key | string | `""` |  |
+| components.clientapi.registration.disabled | bool | `true` | Disable registration |
+| components.clientapi.registration.enable_registration_captcha | bool | `false` | enable reCAPTCHA registration |
+| components.clientapi.registration.recaptcha_bypass_secret | string | `""` | reCAPTCHA bypass secret |
+| components.clientapi.registration.recaptcha_private_key | string | `""` | reCAPTCHA private key |
+| components.clientapi.registration.recaptcha_public_key | string | `""` | reCAPTCHA public key  |
 | components.clientapi.registration.recaptcha_siteverify_api | string | `""` |  |
-| components.clientapi.registration.shared_secret | string | `""` |  |
+| components.clientapi.registration.shared_secret | string | `""` | If set, allows registration by anyone who knows the shared secret, regardless of whether registration is otherwise disabled. |
 | components.eduserver.connect | string | `"eduserver:7778"` | Connect is the address for other components to connect to |
 | components.eduserver.listen_int | int | `7778` | listen_int is the port for the internal api connection |
 | components.federationapi.connect | string | `"federationapi:7772"` | Connect is the address for other components to connect to |
