@@ -113,13 +113,18 @@ configuration:
     cache_lifetime: "10m"
 
   # -- Default logging configuration
+  # @default -- [default dendrite config values](https://github.com/matrix-org/dendrite/blob/master/dendrite-config.yaml)
   logging:
-  - type: file
-    level: "error"
-    params:
-      path: /var/log/dendrite
+    - type: std
+      level: info
+    - type: file
+      # The logging level, must be one of debug, info, warn, error, fatal, panic.
+      level: info
+      params:
+        path: ./logs
 
-  # -- Default traing configuration
+  # -- Default tracing configuration
+  # @default -- disabled
   tracing:
     enabled: false
     jaeger:
@@ -146,8 +151,9 @@ configuration:
     # - msc2836    (Threading, see https://github.com/matrix-org/matrix-doc/pull/2836)
     # - msc2946    (Spaces Summary, see https://github.com/matrix-org/matrix-doc/pull/2946)
 
-# -- Default resource requests/limits
+# -- Default resource requests/limits.
 # This can be set individually for each component, see mediaapi
+# @default -- sets some sane default values
 resources:
   requests:
     cpu: "80m"
@@ -239,6 +245,7 @@ components:
     # -- The maximum number of simultaneous thumbnail generators to run.
     max_thumbnail_generators: 10
     # -- A list of thumbnail sizes to be generated for media content.
+    # @default -- [default dendrite config values](https://github.com/matrix-org/dendrite/blob/master/dendrite-config.yaml)
     thumbnail_sizes:
     - width: 32
       height: 32
@@ -305,6 +312,7 @@ postgresql:
 
   initdbScripts:
     # -- Create databases when first creating a PostgreSQL Server
+    # @default -- creates the required databases
     create_db.sh: |
       #!/bin/sh
       for db in userapi_accounts userapi_devices mediaapi syncapi roomserver keyserver federationapi appservice mscs; do
