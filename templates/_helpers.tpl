@@ -11,6 +11,9 @@
 {{- if not .Values.configuration.database.password -}}
 {{-  fail "Database password must be set." -}}
 {{- end -}}
+{{- if and (eq (len .Values.configuration.jetstream.addresses) 0) .Values.polylith -}}
+{{-  fail "When using polylith, a NATS JetStream address is required." -}}
+{{- end -}}
 {{- end -}}
 
 {{- define "image.name" -}}

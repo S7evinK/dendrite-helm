@@ -5,8 +5,8 @@
 polylith: true
 # Docker image to use
 image:
-  name: "matrixdotorg/dendrite-polylith:latest"
-  pullPolicy: Always
+  name: "matrixdotorg/dendrite-polylith:v0.6.0"
+  pullPolicy: IfNotPresent
 
 configuration:
   # config version
@@ -67,7 +67,7 @@ configuration:
     # Persistent directory to store JetStream streams in. (only relevant if not using external NATS)
     storage_path: "./"
     # List of NATS addresses to connect to. If empty, an in-process NATS server is used.
-    addresses:
+    addresses: []
       #- nats://nats-cluster.nats.svc.cluster.local:4222
 
   # TURN server information that this homeserver should send to clients.
