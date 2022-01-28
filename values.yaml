@@ -125,7 +125,7 @@ configuration:
     port: 65432
 
   # Configuration for experimental MSC's
-  mscs:
+  mscs: []
     # A list of enabled MSC's
     # Currently valid values are:
     # - msc2836    (Threading, see https://github.com/matrix-org/matrix-doc/pull/2836)
