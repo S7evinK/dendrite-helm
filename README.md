@@ -13,6 +13,8 @@ This chart creates a polylith, where every component is in its own deployment an
 
 ## Manual database creation
 
+(You can skip this, if you're deploying the PostgreSQL dependency)
+
 You'll need to create the following databases before starting Dendrite (see [install.md](https://github.com/matrix-org/dendrite/blob/master/docs/INSTALL.md#configuration)):
 
 ```postgres
@@ -102,10 +104,15 @@ Create a folder `appservices` and place your configurations in there.  The confi
 | configuration.metrics.basic_auth.user | string | `"metrics"` | HTTP basic authentication username |
 | configuration.metrics.enabled | bool | `false` | Whether or not Prometheus metrics are enabled. |
 | configuration.mscs | list | `[]` | Configuration for experimental MSC's. (Valid values are: msc2836 and msc2946) |
-| configuration.outbound_proxy | object | `{"enabled":false,"host":"localhost","port":8080,"protocol":"http"}` | Outbound proxy settings for federation api |
+| configuration.outbound_proxy.enabled | bool | `false` | Whether or not an outbound proxy is needed |
+| configuration.outbound_proxy.host | string | `"localhost"` | Outbound proxy host |
+| configuration.outbound_proxy.port | int | `8080` | Outbound proxy port |
+| configuration.outbound_proxy.protocol | string | `"http"` | Outbound proxy protocol |
 | configuration.profiling.enabled | bool | `false` | Enable pprof |
 | configuration.profiling.port | int | `65432` | pprof port, if enabled |
-| configuration.rate_limiting | object | `{"cooloff_ms":500,"enabled":true,"threshold":5}` | Settings for rate-limited endpoints. Rate limiting will kick in after the threshold number of "slots" have been taken by requests from a specific host. Each "slot" will be released after the cooloff time in milliseconds. |
+| configuration.rate_limiting.cooloff_ms | int | `500` | Cooloff time in milliseconds |
+| configuration.rate_limiting.enabled | bool | `true` | Enable rate limiting |
+| configuration.rate_limiting.threshold | int | `5` | After how many requests a rate limit should be activated |
 | configuration.servername | string | `""` | Servername for this Dendrite deployment |
 | configuration.signing_key.create | bool | `true` | Create a new signing key, if not exists |
 | configuration.signing_key.existingSecret | string | `""` | Use an existing secret |

@@ -89,19 +89,22 @@ configuration:
     # -- The TURN password
     turn_password: ""
   
-  # -- Settings for rate-limited endpoints. Rate limiting will kick in after the
-  # threshold number of "slots" have been taken by requests from a specific
-  # host. Each "slot" will be released after the cooloff time in milliseconds.
   rate_limiting:
+    # -- Enable rate limiting
     enabled: true
+    # -- After how many requests a rate limit should be activated
     threshold: 5
+    # -- Cooloff time in milliseconds
     cooloff_ms: 500
 
-  # -- Outbound proxy settings for federation api
   outbound_proxy:
+  # -- Whether or not an outbound proxy is needed
     enabled: false
+    # -- Outbound proxy protocol
     protocol: http
+    # -- Outbound proxy host
     host: localhost
+    # -- Outbound proxy port
     port: 8080
 
   dns_cache:
