@@ -1,72 +1,81 @@
 
 
-# Use a polylith setup, which creates a deployment for every component.
-# If false, a monolithic deployment will be created, with a single deployment.
+# -- Whether or not to deploy a polylith
 polylith: true
-# Docker image to use
+
 image:
+  # -- Docker repository/image to use
   name: "matrixdotorg/dendrite-polylith:v0.6.0"
+  # -- Kubernetes pullPolicy
   pullPolicy: IfNotPresent
 
 configuration:
-  # config version
+  # -- Dendrite config version
   version: 2
 
-  # servername for this dendrite deployment
+  # -- Servername for this Dendrite deployment
   servername: ""
 
-  # The server name to delegate server-server communications to, with optional port
+  # -- The server name to delegate server-server communications to, with optional port
   # e.g. localhost:443
   well_known_server_name: ""
 
-  # Lists of domains that the server will trust as identity servers to verify third
+  # -- Lists of domains that the server will trust as identity servers to verify third
   # party identifiers such as phone numbers and email addresses.
   trusted_third_party_id_servers:
     - matrix.org
     - vector.im
 
-  # Disables federation. Dendrite will not be able to make any outbound HTTP requests
+  # -- Disable federation. Dendrite will not be able to make any outbound HTTP requests
   # to other servers and the federation API will not be exposed.
   disable_federation: false
 
   # signing key to use
   signing_key:
-    # Create a new signing key, if not exists
+    # -- Create a new signing key, if not exists
     create: true
-    # Use an existing secret
+    # -- Use an existing secret
     existingSecret: ""
     
   key_validity_period: 168h0m0s
 
-  # database connection settings
+
   database:
+    # -- Default database host
     host:  ""
+    # -- Default database user
     user:  ""
+    # -- Default database password
     password: ""
 
+    # -- Default database maximum open connections
     max_open_conns: 100
+    # -- Default database maximum idle connections
     max_idle_conns: 2
+    # -- Default database maximum lifetime
     conn_max_lifetime: -1
 
   # prometheus metrics
   metrics:
-    # Whether or not Prometheus metrics are enabled.
+    # -- Whether or not Prometheus metrics are enabled.
     enabled: false
     # HTTP basic authentication to protect access to monitoring.
     basic_auth:
+      # -- HTTP basic authentication username
       user: "metrics"
+      # -- HTTP basic authentication password
       password: metrics
 
   # NATS connection settings
   jetstream:
-    # The prefix to use for NATS topic names for this homeserver. Change this only if
+    # -- The prefix to use for NATS topic names for this homeserver. Change this only if
     # you are running more than one Dendrite homeserver on the same NATS deployment.
     topic_prefix: "Dendrite"
-    # Keep all storage in memory. This is mostly useful for unit tests.
+    # -- Keep all storage in memory. This is mostly useful for unit tests.
     in_memory: false
-    # Persistent directory to store JetStream streams in. (only relevant if not using external NATS)
+    # -- Persistent directory to store JetStream streams in. (only relevant if not using external NATS)
     storage_path: "./"
-    # List of NATS addresses to connect to. If empty, an in-process NATS server is used.
+    # -- List of NATS addresses to connect to. If empty, an in-process NATS server is used.
     addresses: []
       #- nats://nats-cluster.nats.svc.cluster.local:4222
 
@@ -75,10 +84,12 @@ configuration:
     turn_user_lifetime: ""
     turn_uris: []
     turn_shared_secret: ""
+    # -- The TURN username
     turn_username: ""
+    # -- The TURN password
     turn_password: ""
   
-  # Settings for rate-limited endpoints. Rate limiting will kick in after the
+  # -- Settings for rate-limited endpoints. Rate limiting will kick in after the
   # threshold number of "slots" have been taken by requests from a specific
   # host. Each "slot" will be released after the cooloff time in milliseconds.
   rate_limiting:
@@ -86,7 +97,7 @@ configuration:
     threshold: 5
     cooloff_ms: 500
 
-  # outbound proxy settings for federation api
+  # -- Outbound proxy settings for federation api
   outbound_proxy:
     enabled: false
     protocol: http
@@ -94,19 +105,21 @@ configuration:
     port: 8080
 
   dns_cache:
-    # Whether or not the DNS cache is enabled.
+    # -- Whether or not the DNS cache is enabled.
     enabled: false
-    # Maximum number of entries to hold in the DNS cache, and
-    # for how long those items should be considered valid in seconds.
+    # -- Maximum number of entries to hold in the DNS cache
     cache_size: 256
+    # -- Duration for how long DNS cache items should be considered valid ([see time.ParseDuration](https://pkg.go.dev/time#ParseDuration) for more)
     cache_lifetime: "10m"
 
+  # -- Default logging configuration
   logging:
   - type: file
     level: "error"
     params:
       path: /var/log/dendrite
 
+  # -- Default traing configuration
   tracing:
     enabled: false
     jaeger:
@@ -121,18 +134,20 @@ configuration:
       throttler: null
 
   profiling:
+    # -- Enable pprof
     enabled: false
+    # -- pprof port, if enabled
     port: 65432
 
-  # Configuration for experimental MSC's
+  # -- Configuration for experimental MSC's. (Valid values are: msc2836 and msc2946)
   mscs: []
     # A list of enabled MSC's
     # Currently valid values are:
     # - msc2836    (Threading, see https://github.com/matrix-org/matrix-doc/pull/2836)
     # - msc2946    (Spaces Summary, see https://github.com/matrix-org/matrix-doc/pull/2946)
 
-# default resource requests/limits
-# This can be set individually for each component, see mediaapi below
+# -- Default resource requests/limits
+# This can be set individually for each component, see mediaapi
 resources:
   requests:
     cpu: "80m"
@@ -151,20 +166,23 @@ persistence:
     existingClaim: ""
     capacity: "10Gi"
 
-
-
 # Components to deploy
 # listen_int is the port for the internal api connection
 # listen_ext is the port to use for external requests
 # connect defines the dns and port (should be the same as listen_int) for other services to use for connections
 components:
   appservice:
+    # --  listen_int is the port for the internal api connection
     listen_int: 7777
+    # -- Connect is the address for other components to connect to
     connect: appservice:7777
 
   clientapi:
+    # --  listen_int is the port for the internal api connection
     listen_int: 7771
+    # --  listen_ext is the port for external connections
     listen_ext: 8071
+    # -- Connect is the address for other components to connect to
     connect: clientapi:7771
 
     # configuration about 
@@ -184,31 +202,43 @@ components:
       recaptcha_siteverify_api: ""
 
   eduserver:
+    # --  listen_int is the port for the internal api connection
     listen_int: 7778
+    # -- Connect is the address for other components to connect to
     connect: eduserver:7778
 
   federationapi:
+    # --  listen_int is the port for the internal api connection
     listen_int: 7772
+    # --  listen_ext is the port for external connections
     listen_ext: 8072
+    # -- Connect is the address for other components to connect to
     connect: federationapi:7772
     send_max_retries: 16
+    # -- Disable TLS validation
     disable_tls_validation: false
     prefer_direct_fetch: false
 
   keyserver:
+    # --  listen_int is the port for the internal api connection
     listen_int: 7779
+    # -- Connect is the address for other components to connect to
     connect: keyserver:7779
 
   mediaapi:
+    # --  listen_int is the port for the internal api connection
     listen_int: 7774
+    # --  listen_ext is the port for external connections
     listen_ext: 8074
+    # -- Connect is the address for other components to connect to
     connect: mediaapi:7774
+    # -- The max file size for uploaded media files
     max_file_size_bytes: "10485760"
     # Whether to dynamically generate thumbnails if needed.
     dynamic_thumbnails: false
-    # The maximum number of simultaneous thumbnail generators to run.
+    # -- The maximum number of simultaneous thumbnail generators to run.
     max_thumbnail_generators: 10
-    # A list of thumbnail sizes to be generated for media content.
+    # -- A list of thumbnail sizes to be generated for media content.
     thumbnail_sizes:
     - width: 32
       height: 32
@@ -228,30 +258,40 @@ components:
     #    memory: "512Mi"
 
   roomserver:
+    # --  listen_int is the port for the internal api connection
     listen_int: 7770
+    # -- Connect is the address for other components to connect to
     connect: roomserver:7770
 
   syncapi:
+    # --  listen_int is the port for the internal api connection
     listen_int: 7773
+    # --  listen_ext is the port for external connections
     listen_ext: 8073
+    # -- Connect is the address for other components to connect to
     connect: syncapi:7773
-    # This option controls which HTTP header to inspect to find the real remote IP
+    # -- This option controls which HTTP header to inspect to find the real remote IP
     # address of the client. This is likely required if Dendrite is running behind
     # a reverse proxy server.
     real_ip_header: X-Real-IP
 
   userapi:
+    # --  listen_int is the port for the internal api connection
     listen_int: 7781
+    # -- Connect is the address for other components to connect to
     connect: userapi:7781
 
 nats:
+  # -- Deploy NATS JetStream dependency
   enabled: false
 
   nats:
     jetstream:
+      # -- Enable NATS JetStream (required in polylith mode)
       enabled: true
 
 postgresql:
+  # -- Deploy PostgreSQL dependency
   enabled: false
   global:
     storageClass: ""
@@ -264,6 +304,7 @@ postgresql:
       replicationPassword: ""
 
   initdbScripts:
+    # -- Create databases when first creating a PostgreSQL Server
     create_db.sh: |
       #!/bin/sh
       for db in userapi_accounts userapi_devices mediaapi syncapi roomserver keyserver federationapi appservice mscs; do
@@ -274,6 +315,7 @@ postgresql:
     enabled: false
 
 ingress:
+  # -- Create an ingress for a monolith deployment
   enabled: false
   
   annotations: {}
