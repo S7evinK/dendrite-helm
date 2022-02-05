@@ -5,7 +5,7 @@ polylith: true
 
 image:
   # -- Docker repository/image to use
-  name: "matrixdotorg/dendrite-polylith:v0.6.0"
+  name: "matrixdotorg/dendrite-polylith:v0.6.2"
   # -- Kubernetes pullPolicy
   pullPolicy: IfNotPresent
 
