@@ -1,9 +1,8 @@
 # dendrite
 
-![Version: 0.6.0](https://img.shields.io/badge/Version-0.6.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.6.0](https://img.shields.io/badge/AppVersion-0.6.0-informational?style=flat-square)
-Dendrite Matrix Homeserver
 
-Status: **NOT PRODUCTION READY**
+
+Status: **ARCHIVED** use [use k8s@home instead](https://github.com/k8s-at-home/charts/tree/master/charts/incubator/dendrite)
 
 ## About
 
@@ -125,7 +124,7 @@ Create a folder `appservices` and place your configurations in there.  The confi
 | configuration.turn.turn_username | string | `""` | The TURN username |
 | configuration.version | int | `2` | Dendrite config version |
 | configuration.well_known_server_name | string | `""` | The server name to delegate server-server communications to, with optional port e.g. localhost:443 |
-| image.name | string | `"matrixdotorg/dendrite-polylith:v0.6.0"` | Docker repository/image to use |
+| image.name | string | `"matrixdotorg/dendrite-polylith:v0.6.2"` | Docker repository/image to use |
 | image.pullPolicy | string | `"IfNotPresent"` | Kubernetes pullPolicy |
 | ingress.annotations | object | `{}` |  |
 | ingress.enabled | bool | `false` | Create an ingress for a monolith deployment |
