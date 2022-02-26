@@ -2,7 +2,7 @@
 
 
 
-Status: **ARCHIVED** use [use k8s@home instead](https://github.com/k8s-at-home/charts/tree/master/charts/incubator/dendrite)
+Status: **ARCHIVED** use [k8s@home](https://github.com/k8s-at-home/charts/tree/master/charts/incubator/dendrite) instead
 
 ## About
 
